@@ -1,0 +1,14 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    uses: lifeipkg/rcp-contracts/.github/workflows/java-service.yml@main
+    with:
+      service: db-ops
+      contract: contracts/openapi/db-ops.yaml
+      core-ref: v1.0.0

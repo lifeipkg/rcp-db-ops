@@ -1,0 +1,24 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: db-ops
+  datasource:
+    url: jdbc:h2:mem:riskdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+
+dbops:
+  # 迁移真源在部署仓 rcp-ops/migrations，容器内以挂载卷形式提供
+  migrations-dir: migrations
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
