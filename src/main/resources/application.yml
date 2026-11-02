@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: db-ops
+  cloud:
+    nacos:
+      discovery:
+        # 服务发现接线（rcp-contracts/docs/DISCOVERY.md）：占位符默认值命中部署侧
+        # Service 名（compose 服务名与 K8s Service 名均为 nacos），部署侧无需注入。
+        server-addr: ${NACOS_SERVER:nacos:8848}
+        namespace: ${NACOS_NAMESPACE:risk-control}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
   datasource:
     url: jdbc:h2:mem:riskdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     username: sa

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.cloud.nacos.discovery.enabled=false")
 class MigrationServiceTest {
 
     private static final Path MIGRATIONS = Path.of("target/test-migrations");
