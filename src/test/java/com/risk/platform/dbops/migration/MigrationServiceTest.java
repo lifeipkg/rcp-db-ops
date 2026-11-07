@@ -35,6 +35,8 @@ class MigrationServiceTest {
         registry.add("dbops.migrations-dir", MIGRATIONS::toString);
         registry.add("spring.datasource.url",
                 () -> "jdbc:h2:mem:dbops-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1");
+        registry.add("spring.datasource.username", () -> "sa");
+        registry.add("spring.datasource.password", () -> "");
     }
 
     @BeforeAll
