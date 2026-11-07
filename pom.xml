@@ -16,7 +16,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring-boot.version>3.3.5</spring-boot.version>
-    <!-- 版本真源：rcp-contracts/registry/services.yaml 的 baseline_stack，禁止自行抬版本 -->
+    <!-- 版本真源：rcp-ontology/ontology/abox/platform.ttl 的 rcp:stack，禁止自行抬版本 -->
     <spring-cloud.version>2023.0.3</spring-cloud.version>
     <spring-cloud-alibaba.version>2023.0.3.4</spring-cloud-alibaba.version>
   </properties>
