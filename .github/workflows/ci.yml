@@ -7,8 +7,9 @@ on:
 
 jobs:
   build:
-    uses: lifeipkg/rcp-contracts/.github/workflows/java-service.yml@main
+    # Go 服务不依赖 rcp-core（Java 库），故没有 core-ref 参数；
+    # 契约对表与 vet/test/build 都在共享模板里，见 rcp-contracts/.github/workflows/go-service.yml
+    uses: lifeipkg/rcp-contracts/.github/workflows/go-service.yml@main
     with:
       service: db-ops
       contract: contracts/openapi/db-ops.yaml
-      core-ref: v1.0.0

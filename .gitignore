@@ -1,4 +1,9 @@
-target/
+# Go 构建产物
+/db-ops
+*.exe
+*.test
+*.out
+
 .agents/
 .deps/
 .idea/

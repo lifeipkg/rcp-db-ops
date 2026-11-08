@@ -1,0 +1,7 @@
+.git
+.agents
+.deps
+.idea
+*.exe
+*.test
+*.out

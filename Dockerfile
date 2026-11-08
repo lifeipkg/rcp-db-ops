@@ -1,15 +1,21 @@
-# 数据库操作服务（db-ops）
-FROM maven:3.9-eclipse-temurin-17 AS build
-WORKDIR /build
-COPY pom.xml .
-RUN mvn -B -q dependency:go-offline || true
-COPY src ./src
-RUN mvn -B -q package -DskipTests
+# 数据库操作服务（db-ops）· Go
+FROM golang:1.22-alpine AS build
+WORKDIR /src
 
-FROM eclipse-temurin:17-jre
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/db-ops .
+
+FROM alpine:3.20
+RUN adduser -D -u 10001 app
 WORKDIR /app
-RUN groupadd -r risk && useradd -r -g risk risk && mkdir -p /app/migrations
-COPY --from=build /build/target/db-ops-1.0.0.jar app.jar
-USER risk
+# 迁移目录由部署侧挂载（K8s configMap / compose volume），镜像里只建空目录占位
+RUN mkdir -p /app/migrations && chown app /app/migrations
+COPY --from=build /out/db-ops /app/db-ops
+USER app
 EXPOSE 8091
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENV SERVER_PORT=8091
+ENV DBOPS_MIGRATIONS_DIR=/app/migrations
+ENTRYPOINT ["/app/db-ops"]
