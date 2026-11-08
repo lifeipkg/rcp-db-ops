@@ -69,10 +69,10 @@ func writeMigration(t *testing.T, dir, name, content string) {
 func newRouter(t *testing.T) (http.Handler, *fakeRepo, string) {
 	t.Helper()
 	dir := t.TempDir()
-	writeMigration(t, dir, "V1.0.0__base.sql", "CREATE TABLE patrol_event (event_id VARCHAR(64) PRIMARY KEY)")
-	writeMigration(t, dir, "U1.0.0__base.sql", "DROP TABLE patrol_event")
-	writeMigration(t, dir, "V1.1.0__verdict.sql", "CREATE TABLE patrol_verdict (event_id VARCHAR(64) PRIMARY KEY)")
-	writeMigration(t, dir, "U1.1.0__verdict.sql", "DROP TABLE patrol_verdict")
+	writeMigration(t, dir, "V1.0.0__base.sql", "CREATE TABLE resource_a (event_id VARCHAR(64) PRIMARY KEY)")
+	writeMigration(t, dir, "U1.0.0__base.sql", "DROP TABLE resource_a")
+	writeMigration(t, dir, "V1.1.0__verdict.sql", "CREATE TABLE resource_b (event_id VARCHAR(64) PRIMARY KEY)")
+	writeMigration(t, dir, "U1.1.0__verdict.sql", "DROP TABLE resource_b")
 
 	repo := &fakeRepo{}
 	service := migration.NewService(repo, &fakeTx{repo: repo}, dir)
@@ -182,9 +182,9 @@ func TestMissingMigrationsDirMapsTo400(t *testing.T) {
 }
 
 func TestMigrationFailureNamesVersionWithoutSQLLeak(t *testing.T) {
-	repo := &fakeRepo{failOn: "CREATE TABLE patrol_event"}
+	repo := &fakeRepo{failOn: "CREATE TABLE resource_a"}
 	dir := t.TempDir()
-	writeMigration(t, dir, "V1.0.0__base.sql", "CREATE TABLE patrol_event (event_id VARCHAR(64))")
+	writeMigration(t, dir, "V1.0.0__base.sql", "CREATE TABLE resource_a (event_id VARCHAR(64))")
 	service := migration.NewService(repo, &fakeTx{repo: repo}, dir)
 	h := NewRouter(NewHandler(service, pinger{}))
 
