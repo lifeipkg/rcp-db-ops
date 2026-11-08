@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    # Go 服务不依赖 rcp-core（Java 库），故没有 core-ref 参数；
+    # Go 服务没有共享 Java 基座，故没有 core-ref 参数；
     # 契约对表与 vet/test/build 都在共享模板里，见 rcp-contracts/.github/workflows/go-service.yml
     uses: lifeipkg/rcp-contracts/.github/workflows/go-service.yml@main
     with:

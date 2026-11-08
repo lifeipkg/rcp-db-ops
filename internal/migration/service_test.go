@@ -102,10 +102,10 @@ func (f *fakeDB) versions() []string {
 func setup(t *testing.T) (*Service, *fakeDB, string) {
 	t.Helper()
 	dir := t.TempDir()
-	write(t, dir, "V1.0.0__base.sql", "CREATE TABLE patrol_event (event_id VARCHAR(64) PRIMARY KEY)")
-	write(t, dir, "U1.0.0__base.sql", "DROP TABLE patrol_event")
-	write(t, dir, "V1.1.0__verdict.sql", "CREATE TABLE patrol_verdict (event_id VARCHAR(64) PRIMARY KEY)")
-	write(t, dir, "U1.1.0__verdict.sql", "DROP TABLE patrol_verdict")
+	write(t, dir, "V1.0.0__base.sql", "CREATE TABLE resource_a (event_id VARCHAR(64) PRIMARY KEY)")
+	write(t, dir, "U1.0.0__base.sql", "DROP TABLE resource_a")
+	write(t, dir, "V1.1.0__verdict.sql", "CREATE TABLE resource_b (event_id VARCHAR(64) PRIMARY KEY)")
+	write(t, dir, "U1.1.0__verdict.sql", "DROP TABLE resource_b")
 	db := &fakeDB{}
 	return NewService(db, db, dir), db, dir
 }
@@ -258,7 +258,7 @@ func TestNothingToRollback(t *testing.T) {
 func TestMigrateFailureDoesNotRecord(t *testing.T) {
 	service, db, _ := setup(t)
 	// 让第二个版本的第一条语句失败：该版本必须整体回滚且不记账
-	db.failOn = "CREATE TABLE patrol_verdict"
+	db.failOn = "CREATE TABLE resource_b"
 
 	_, err := service.Migrate(context.Background(), "")
 	var domain *Error
@@ -273,7 +273,7 @@ func TestMigrateFailureDoesNotRecord(t *testing.T) {
 
 func TestMigrateFailureKeepsLedgerOfPreviousVersions(t *testing.T) {
 	service, db, _ := setup(t)
-	db.failOn = "CREATE TABLE patrol_verdict"
+	db.failOn = "CREATE TABLE resource_b"
 	_, _ = service.Migrate(context.Background(), "")
 
 	// 修掉故障后重跑：只补 1.1.0，1.0.0 不重复执行
@@ -295,7 +295,7 @@ func TestRollbackFailureKeepsLedger(t *testing.T) {
 	if _, err := service.Migrate(context.Background(), ""); err != nil {
 		t.Fatalf("前置迁移失败: %v", err)
 	}
-	db.failOn = "DROP TABLE patrol_verdict"
+	db.failOn = "DROP TABLE resource_b"
 
 	_, err := service.RollbackTo(context.Background(), "1.0.0")
 	var domain *Error
