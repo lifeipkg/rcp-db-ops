@@ -4,6 +4,9 @@
 *.test
 *.out
 
+# Maven 遗留：Go 化后不再生成，但本地旧的 target/ 仍可能残留，不得入库。
+target/
+
 .agents/
 .deps/
 .idea/
